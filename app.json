@@ -1,0 +1,57 @@
+{
+  "name": "ghost-heroku-github",
+  "description": "Easily deploy Ghost on Heroku, with GitHub for storage",
+  "logo": "https://ghost.org/icons/icon-256x256.png",
+  "repository": "https://github.com/wishx97/cms.ifvictr.com",
+  "scripts": {
+    "postdeploy": "bin/init-deployment"
+  },
+  "success_url": "/ghost",
+  "addons": [
+    "mailgun"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku-community/nginx"
+    }
+  ],
+  "env": {
+    "GHOST_GITHUB_BASE_URL": {
+      "description": "Base URL of newly saved images. Uses `raw.githubusercontent.com` by default.",
+      "required": false
+    },
+    "GHOST_GITHUB_BRANCH": {
+      "description": "Branch to push assets to. Defaults to `master`.",
+      "required": false
+    },
+    "GHOST_GITHUB_DESTINATION": {
+      "description": "Directory to push assets to. Defaults to `/`.",
+      "required": false
+    },
+    "GHOST_GITHUB_OWNER": {
+      "description": "Username of the user/organization the repository is under."
+    },
+    "GHOST_GITHUB_REPO": {
+      "description": "Name of the repository."
+    },
+    "GHOST_GITHUB_TOKEN": {
+      "description": "An access token from the account commits will be authored by."
+    },
+    "GHOST_GITHUB_USE_RELATIVE_URLS": {
+      "description": "Whether or not to return relative URLs instead of absolute URLs. Might be of use to people who generate and serve a static version of their Ghost blog.",
+      "required": false
+    },
+    "MYSQL_DATABASE_URL": {
+      "description": "MYSQL connection url",
+      "required": true
+    },
+    "PUBLIC_URL": {
+      "description": "The HTTPS URL of this app: either your custom domain or default `herokuapp.com` hostname.",
+      "value": "https://YOURAPPNAME.herokuapp.com"
+    }
+    
+  }
+}

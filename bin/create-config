@@ -1,0 +1,89 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const path = require('path')
+const url = require('url')
+
+const envValues = require('./common/env-values')
+const appRoot = path.join(__dirname, '..')
+
+function createConfig() {
+    let storage = {}
+    if (!!process.env.GHOST_GITHUB_TOKEN) {
+        storage = {
+            active: 'ghost-storage-github',
+            'ghost-storage-github': {
+                baseUrl: process.env.GHOST_GITHUB_BASE_URL,
+                branch: process.env.GHOST_GITHUB_BRANCH,
+                destination: process.env.GHOST_GITHUB_DESTINATION,
+                owner: process.env.GHOST_GITHUB_OWNER,
+                repo: process.env.GHOST_GITHUB_REPO,
+                token: process.env.GHOST_GITHUB_TOKEN,
+                useRelativeUrls: process.env.GHOST_GITHUB_USE_RELATIVE_URLS
+            }
+        }
+    }
+
+    const config = {
+        url: process.env.PUBLIC_URL,
+        logging: {
+            level: 'info',
+            transports: ['stdout']
+        },
+        mail: {
+            transport: 'SMTP',
+            options: {
+                service: 'Mailgun',
+                auth: {
+                    user: process.env.MAILGUN_SMTP_LOGIN,
+                    pass: process.env.MAILGUN_SMTP_PASSWORD
+                }
+            }
+        },
+        storage,
+        database: {
+            client: 'mysql',
+            connection: getMysqlConfig(envValues.mysqlDatabaseUrl),
+            pool: { min: 0, max: 5 },
+            debug: false
+        },
+        server: {
+            socket: '/tmp/nginx.socket'
+        },
+        paths: {
+            contentPath: path.join(appRoot, '/content/')
+        },
+        privacy: {
+            useUpdateCheck: false
+        }
+    }
+
+    return config
+}
+
+function getMysqlConfig(connectionUrl) {
+    if (connectionUrl == null) {
+        return {}
+    }
+
+    const dbConfig = url.parse(connectionUrl)
+    if (dbConfig == null) {
+        return {}
+    }
+
+    const dbAuth = dbConfig.auth ? dbConfig.auth.split(':') : []
+    const dbConnection = {
+        host: dbConfig.hostname,
+        port: dbConfig.port || '3306',
+        user: dbAuth[0],
+        password: dbAuth[1],
+        database: dbConfig.pathname != null
+            ? dbConfig.pathname.split('/')[1]
+            : 'ghost'
+    }
+
+    return dbConnection
+}
+
+const configContents = JSON.stringify(createConfig(), null, 2)
+fs.writeFileSync(path.join(appRoot, 'config.production.json'), configContents)

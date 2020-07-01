@@ -1,0 +1,32 @@
+{
+  "name": "cms.ifvictr.com",
+  "version": "3.13.1",
+  "private": true,
+  "homepage": "https://github.com/wishx97/cms.ifvictr.com#readme",
+  "bugs": {
+    "url": "https://github.com/TryGhost/Ghost/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wishx97/cms.ifvictr.com.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Victor Truong",
+    "email": "victor@victortruong.com",
+    "url": "https://victortruong.com"
+  },
+  "main": "./server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "casper": "github:TryGhost/Casper#3.0.12",
+    "ghost": "3.13.1",
+    "ghost-storage-github": "2.0.1",
+    "mysql": "2.18.1"
+  },
+  "engines": {
+    "node": "^12.10.0"
+  }
+}

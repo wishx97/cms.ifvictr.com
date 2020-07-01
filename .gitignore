@@ -1,0 +1,5 @@
+.git/
+content/data/*.db
+content/logs/
+node_modules/
+config.production.json
